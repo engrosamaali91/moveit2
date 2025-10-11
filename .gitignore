@@ -18,6 +18,8 @@ __pycache__/
 # Build or dist files
 dist/
 build/
+log/
+install/
 *.log
 
 # Environment files
