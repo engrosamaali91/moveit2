@@ -1,0 +1,30 @@
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# VS Code or IDE settings
+.vscode/
+.idea/
+
+# Build or dist files
+dist/
+build/
+*.log
+
+# Environment files
+.env
+.env.local
+
+# Compiled files
+*.exe
+*.dll
+*.class
