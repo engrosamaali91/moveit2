@@ -18,4 +18,3 @@ ros2 launch urdf_tutorial display.launch.py model:=/home/osama/moveit2_ws/src/my
 or 
 # Laucnh the robot arm with display.launch.xml file
 ros2 launch my_robot_description display.launch.xml
-
