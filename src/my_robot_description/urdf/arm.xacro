@@ -9,6 +9,12 @@
             <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
             <material name="grey" />
         </visual>
+        <collision>
+            <geometry>
+                <box size="0.4 0.4 0.1"/>   
+            </geometry>        
+            <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+        </collision>
 
     </link>
 
@@ -21,6 +27,12 @@
             <origin xyz="0 0 0.25" rpy="0 0 0" />
             <material name="blue" />
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.1" length="0.5"/>    
+            </geometry>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+        </collision>
     </link>
 
 
@@ -32,6 +44,12 @@
             <origin xyz="0 0 0.3" rpy="0 0 0" />
             <material name="silver" />
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.05" length="0.6"/>    
+            </geometry>
+            <origin xyz="0 0 0.3" rpy="0 0 0" />
+        </collision>
     </link>
 
 
@@ -43,6 +61,12 @@
             <origin xyz="0 0 0.05" rpy="0 0 0" />
             <material name="blue" />
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.05" length="0.1"/>    
+            </geometry>
+            <origin xyz="0 0 0.05" rpy="0 0 0" />
+        </collision>
     </link>
 
 
@@ -54,6 +78,12 @@
             <origin xyz="0 0 0.25" rpy="0 0 0" />
             <material name="silver" />
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.05" length="0.5"/>    
+            </geometry>
+            <origin xyz="0 0 0.25" rpy="0 0 0" />
+        </collision>
     </link>
 
     <link name="wrist_link">
@@ -64,7 +94,12 @@
             <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
             <material name="blue" />
         </visual>
-
+        <collision>
+            <geometry>
+                <box size="0.1 0.1 0.05"/>   
+            </geometry>        
+            <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
+        </collision>
     </link>
 
 
@@ -76,7 +111,12 @@
             <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
             <material name="silver" />
         </visual>
-
+        <collision>
+            <geometry>
+                <box size="0.1 0.1 0.02"/>   
+            </geometry>        
+            <origin xyz="0.0 0.0 0.01" rpy="0.0 0.0 0.0"/>
+        </collision>
     </link>
 
 
