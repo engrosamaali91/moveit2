@@ -121,7 +121,7 @@
 
 
     <link name="tool_link">
- 
+        
     </link>
 
     <joint name="joint_1" type="revolute">
