@@ -39,3 +39,45 @@ sudo apt install \
 ```bash
 ros2 launch my_robot_moveit_config demo.launch.py 
 ```
+
+
+
+
+### Run from terminal robot bringup package
+
+```bash 
+ros2 run robot_state_publisher robot_state_publisher --ros-args -p robot_description:="$(xacro /home/osama/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro)"
+```
+
+in a seperate terminal 
+```bash
+# In a clean terminal
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
+ros2 run controller_manager ros2_control_node --ros-args \
+  -p robot_description:="$(xacro ~/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro)" \
+  --params-file ~/moveit2_ws/src/my_robot_bringup/config/ros2_controllers.yaml
+```
+
+```bash
+ros2 run controller_manager spawner joint_state_broadcaster
+ros2 run controller_manager spawner arm_controller
+ros2 run controller_manager spawner gripper_controller
+
+ros2 launch my_robot_moveit_config move_group.launch.py
+```
+
+In a seperate terminal
+```bash
+ros2 run rviz2 rviz2 -d ~/moveit2_ws/src/my_robot_description/rviz/urdf_config.rviz 
+```
+
+> Note: Go to context and add motionPlanner and then change CHOMP to ompl
+
+
+After that i created my_robot_bringup launch file that launches all the above nodes
+
+```bash 
+ros2 launch my_robot_bringup my_robot.launch.xml
+```
