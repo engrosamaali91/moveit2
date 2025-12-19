@@ -81,3 +81,14 @@ After that i created my_robot_bringup launch file that launches all the above no
 ```bash 
 ros2 launch my_robot_bringup my_robot.launch.xml
 ```
+
+
+
+
+
+
+----------------------------------------------------------------------------------------
+
+# Issues Encountered 
+
+* The build failed for pacakge ```my_robot_commander_cpp``` because the MoveIt2 header name differed in ROS 2 Humble (.h instead of .hpp). Updating the include resolved the issue.
