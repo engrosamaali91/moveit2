@@ -19,25 +19,41 @@ int main(int argc, char** argv)
 
     // Named goal
 
+    // arm.setStartStateToCurrentState();
+    // arm.setNamedTarget("pose_1");
+
+    // moveit::planning_interface::MoveGroupInterface::Plan plan_1;
+    // bool success_1 = arm.plan(plan_1) == moveit::core::MoveItErrorCode::SUCCESS;
+    // if (success_1)
+    // {
+    //     arm.execute(plan_1);
+    // }
+
+
+    // arm.setStartStateToCurrentState();
+    // arm.setNamedTarget("home");
+
+    // moveit::planning_interface::MoveGroupInterface::Plan plan_2;
+    // bool success_2 = arm.plan(plan_2) == moveit::core::MoveItErrorCode::SUCCESS;
+    // if (success_2)
+    // {
+    //     arm.execute(plan_2);
+    // }
+
+
+    // -------------------------------------------------------------------------------
+    // Joint goal
+
+    std::vector<double> joint = {1.57, 0.5, 0.0, 1.5, 0.0, -0.7};
+
     arm.setStartStateToCurrentState();
-    arm.setNamedTarget("pose_1");
+    arm.setJointValueTarget(joint);
 
     moveit::planning_interface::MoveGroupInterface::Plan plan_1;
     bool success_1 = arm.plan(plan_1) == moveit::core::MoveItErrorCode::SUCCESS;
     if (success_1)
     {
         arm.execute(plan_1);
-    }
-
-
-    arm.setStartStateToCurrentState();
-    arm.setNamedTarget("home");
-
-    moveit::planning_interface::MoveGroupInterface::Plan plan_2;
-    bool success_2 = arm.plan(plan_2) == moveit::core::MoveItErrorCode::SUCCESS;
-    if (success_2)
-    {
-        arm.execute(plan_2);
     }
 
     rclcpp::shutdown();
