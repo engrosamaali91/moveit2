@@ -44,10 +44,38 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------------
     // Joint goal
 
-    std::vector<double> joint = {1.57, 0.5, 0.0, 1.5, 0.0, -0.7};
+    // std::vector<double> joint = {1.57, 0.5, 0.0, 1.5, 0.0, -0.7};
+
+    // arm.setStartStateToCurrentState();
+    // arm.setJointValueTarget(joint);
+
+    // moveit::planning_interface::MoveGroupInterface::Plan plan_1;
+    // bool success_1 = arm.plan(plan_1) == moveit::core::MoveItErrorCode::SUCCESS;
+    // if (success_1)
+    // {
+    //     arm.execute(plan_1);
+    // }
+
+
+    // -------------------------------------------------------------------------------
+    // Pose goal
+
+    tf2::Quaternion q;
+    q.setRPY(3.14, 0, 0);
+    q = q.normalize();
+
+    geometry_msgs::msg::PoseStamped target_pose;
+    target_pose.header.frame_id = "base_link";
+    target_pose.pose.position.x = 0.0;
+    target_pose.pose.position.y = -0.7;
+    target_pose.pose.position.z = 0.4;
+    target_pose.pose.orientation.x = q.getX();
+    target_pose.pose.orientation.y = q.getY();
+    target_pose.pose.orientation.z = q.getZ();
+    target_pose.pose.orientation.w = q.getW();
 
     arm.setStartStateToCurrentState();
-    arm.setJointValueTarget(joint);
+    arm.setPoseTarget(target_pose);
 
     moveit::planning_interface::MoveGroupInterface::Plan plan_1;
     bool success_1 = arm.plan(plan_1) == moveit::core::MoveItErrorCode::SUCCESS;
@@ -56,7 +84,8 @@ int main(int argc, char** argv)
         arm.execute(plan_1);
     }
 
-    rclcpp::shutdown();
+
+        rclcpp::shutdown();
     spinner.join();
     return 0;
 }
