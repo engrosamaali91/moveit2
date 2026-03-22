@@ -82,6 +82,43 @@ After that i created my_robot_bringup launch file that launches all the above no
 ros2 launch my_robot_bringup my_robot.launch.xml
 ```
 
+Test moveit programatically
+
+```bash 
+ros2 run my_robot_commander_cpp test_moveit 
+```
+
+
+Create node and convert test_moveit file to Commander class
+
+```bash
+ros2 run my_robot_commander_cpp commander
+```
+
+in a seperate terminal check ```/open_gripper``` topic is a subscriber now with message type example_interfaces/msg/Bool
+
+
+```bash
+ros2 topic pub -1 /open_gripper example_interfaces/msg/Bool "{data: true}"
+```
+
+And observe if the gripper is being opened or closed
+
+
+Now try to subscribe on topic ```joint_command``` to move the robot to the target pose, simply add a call back just like we did for gripper 
+
+```bash 
+ros2 topic pub -1 /joint_command example_interfaces/msg/Float64MultiArray "{data: [-0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}"
+```
+
+
+# Subscribe on Custom message 
+
+```bash
+ros2 topic pub -1 /pose_command my_robot_interfaces/msg/PoseCommand "{x: 0.7, y: 0.0, z: 0.2 ,roll: 3.14, pitch: 0.0, yaw: 0.0, cartesian_path: true}"
+```
+
+
 
 
 
