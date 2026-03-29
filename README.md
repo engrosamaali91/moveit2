@@ -1,57 +1,80 @@
-## 🚀 ROS 2 Workspace for Robot Arm
+# ROS 2 Workspace for Robot Arm
 
-To build and run the project, execute the following commands from the workspace root (`~/moveit2_ws`).
+This repository contains a ROS 2 Humble workspace for a custom robot arm with:
+
+- Robot description and RViz visualization
+- ros2_control controllers
+- MoveIt 2 configuration
+- C++ commander nodes
+- Custom message interfaces
+
+All commands below are intended to be run from:
 
 ```bash
-# 1. Pull the latest changes
-git pull origin main
-
-# 2. Build your ROS 2 workspace
-colcon build
-
-# 3. Source the workspace
-# (You must do this in every new terminal)
-source install/setup.bash
+cd ~/moveit2_ws
 ```
 
-### 🤖 Launch Robot Arm Display
+## Prerequisites
 
-To visualize the robot arm model in RViz, you can use either of the following commands:
+Install required ROS 2 packages:
 
 ```bash
-# Option A: Using the generic urdf_tutorial launcher
-ros2 launch urdf_tutorial display.launch.py model:=/home/osama/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro
-# Option B: Using the package's specific launcher
-ros2 launch my_robot_description display.launch.xml
-```
-
-
-### Launch moveit config package
-
-prior to launch 
-```bash
-sudo apt install \
+sudo apt update
+sudo apt install -y \
   ros-humble-ros2-control \
   ros-humble-controller-manager \
   ros-humble-ros2-controllers
 ```
 
+## Build the Workspace
+
 ```bash
-ros2 launch my_robot_moveit_config demo.launch.py 
+# Pull latest changes (optional)
+git pull origin main
+
+# Build
+colcon build
+
+# Source overlay
+source /opt/ros/humble/setup.bash
+source install/setup.bash
 ```
 
+Important: run `source install/setup.bash` in every new terminal.
 
+## Visualize the Robot in RViz
 
+Use one of the following options.
 
-### Run from terminal robot bringup package
+```bash
+# Option A: urdf_tutorial launcher
+ros2 launch urdf_tutorial display.launch.py model:=/home/osama/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro
 
-```bash 
-ros2 run robot_state_publisher robot_state_publisher --ros-args -p robot_description:="$(xacro /home/osama/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro)"
+# Option B: package-specific launcher
+ros2 launch my_robot_description display.launch.xml
 ```
 
-in a seperate terminal 
+## Launch MoveIt
+
 ```bash
-# In a clean terminal
+ros2 launch my_robot_moveit_config demo.launch.py
+```
+
+## Bringup (Manual Multi-Terminal)
+
+### Terminal 1: robot_state_publisher
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
+ros2 run robot_state_publisher robot_state_publisher --ros-args \
+  -p robot_description:="$(xacro ~/moveit2_ws/src/my_robot_description/urdf/arm2arm.urdf.xacro)"
+```
+
+### Terminal 2: ros2_control and controllers
+
+```bash
 source /opt/ros/humble/setup.bash
 source ~/moveit2_ws/install/setup.bash
 
@@ -61,6 +84,9 @@ ros2 run controller_manager ros2_control_node --ros-args \
 ```
 
 ```bash
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
 ros2 run controller_manager spawner joint_state_broadcaster
 ros2 run controller_manager spawner arm_controller
 ros2 run controller_manager spawner gripper_controller
@@ -68,64 +94,95 @@ ros2 run controller_manager spawner gripper_controller
 ros2 launch my_robot_moveit_config move_group.launch.py
 ```
 
-In a seperate terminal
+### Terminal 3: RViz
+
 ```bash
-ros2 run rviz2 rviz2 -d ~/moveit2_ws/src/my_robot_description/rviz/urdf_config.rviz 
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
+ros2 run rviz2 rviz2 -d ~/moveit2_ws/src/my_robot_description/rviz/urdf_config.rviz
 ```
 
-> Note: Go to context and add motionPlanner and then change CHOMP to ompl
+Planning note: in RViz Motion Planning panel, select the desired planner plugin (for example, OMPL instead of CHOMP) based on your setup.
 
+## Bringup (Single Launch File)
 
-After that i created my_robot_bringup launch file that launches all the above nodes
+If you are using your combined bringup launch file:
 
-```bash 
+```bash
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
 ros2 launch my_robot_bringup my_robot.launch.xml
 ```
 
-Test moveit programatically
-
-```bash 
-ros2 run my_robot_commander_cpp test_moveit 
-```
-
-
-Create node and convert test_moveit file to Commander class
+## Run Commander Nodes
 
 ```bash
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
+ros2 run my_robot_commander_cpp test_moveit
+```
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/moveit2_ws/install/setup.bash
+
 ros2 run my_robot_commander_cpp commander
 ```
 
-in a seperate terminal check ```/open_gripper``` topic is a subscriber now with message type example_interfaces/msg/Bool
+## Topic-Based Functional Tests
 
+### Gripper command
+
+Confirm `/open_gripper` has a subscriber, then publish:
 
 ```bash
 ros2 topic pub -1 /open_gripper example_interfaces/msg/Bool "{data: true}"
 ```
 
-And observe if the gripper is being opened or closed
+### Joint command
 
-
-Now try to subscribe on topic ```joint_command``` to move the robot to the target pose, simply add a call back just like we did for gripper 
-
-```bash 
+```bash
 ros2 topic pub -1 /joint_command example_interfaces/msg/Float64MultiArray "{data: [-0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}"
 ```
 
-
-# Subscribe on Custom message 
+### Custom pose command
 
 ```bash
-ros2 topic pub -1 /pose_command my_robot_interfaces/msg/PoseCommand "{x: 0.7, y: 0.0, z: 0.2 ,roll: 3.14, pitch: 0.0, yaw: 0.0, cartesian_path: true}"
+ros2 topic pub -1 /pose_command my_robot_interfaces/msg/PoseCommand "{x: 0.7, y: 0.0, z: 0.2, roll: 3.14, pitch: 0.0, yaw: 0.0, cartesian_path: true}"
 ```
 
+## Troubleshooting
 
+### Error: `The passed message type is invalid`
 
+Cause: terminal is not sourced with the local workspace overlay.
 
+Fix:
 
+```bash
+cd ~/moveit2_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 interface show my_robot_interfaces/msg/PoseCommand
+```
 
+If `ros2 interface show` succeeds, retry the publish command.
 
-----------------------------------------------------------------------------------------
+### Error: CMake source directory does not exist
 
-# Issues Encountered 
+Cause: stale CMake cache from an older package path.
 
-* The build failed for pacakge ```my_robot_commander_cpp``` because the MoveIt2 header name differed in ROS 2 Humble (.h instead of .hpp). Updating the include resolved the issue.
+Fix:
+
+```bash
+cd ~/moveit2_ws
+rm -rf build/my_robot_interfaces install/my_robot_interfaces log/latest_build/my_robot_interfaces
+colcon build --packages-select my_robot_interfaces --cmake-clean-cache
+```
+
+### Known build issue resolved
+
+`my_robot_commander_cpp` initially failed to build because MoveIt 2 header naming in ROS 2 Humble used `.h` instead of `.hpp` for the referenced include. Updating the include resolved the issue.
